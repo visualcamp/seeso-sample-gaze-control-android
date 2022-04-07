@@ -46,6 +46,7 @@ class SelectFragment : Fragment() {
     private val indexItemMin: Int = 0
     private val indexItemMax: Int = 10
     private var indexItem: Int = 0
+    private var itemListArray: ArrayList<String> = ArrayList<String>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -72,6 +73,11 @@ class SelectFragment : Fragment() {
 
         // Resize ROI
         resizeROI()
+
+        // Item List
+        for (i in indexItemMin..indexItemMax) {
+            itemListArray.add(getString(R.string.title_item) + " $i")
+        }
 
         // Item Setting
         setItemIndex(0)
@@ -119,23 +125,44 @@ class SelectFragment : Fragment() {
         indexItem = index
 
         activity?.runOnUiThread {
-            text_item_previous?.text = getText(R.string.title_item).toString() + " " + (index - 1)
-            text_item_next?.text = getText(R.string.title_item).toString() + " "+ (index + 1)
-            text_item_current?.text = getText(R.string.title_item).toString() + " $index"
+            // Previous Item Text
+            if (index > indexItemMin + 1) {
+                text_item_previous_2?.text = itemListArray[index-2]
+            } else {
+                text_item_previous_2?.text = ""
+            }
 
+            if (index > indexItemMin) {
+                text_item_previous_1?.text = itemListArray[index-1]
+            } else {
+                text_item_previous_1?.text = ""
+            }
+
+            // Next Item Text
+            if (index < indexItemMax - 1) {
+                text_item_next_2?.text = itemListArray[index+2]
+            } else {
+                text_item_next_2?.text = ""
+            }
+
+            if (index < indexItemMax) {
+                text_item_next_1?.text = itemListArray[index+1]
+            } else {
+                text_item_next_1?.text = ""
+            }
+
+            text_item_current?.text = itemListArray[index]
+
+            // Button Visibility
             if (indexItemMin >= index) {
-                text_item_previous?.visibility = View.INVISIBLE
                 btn_previous?.visibility = View.INVISIBLE
             } else {
-                text_item_previous?.visibility = View.VISIBLE
                 btn_previous?.visibility = View.VISIBLE
             }
 
             if (index >= indexItemMax) {
-                text_item_next?.visibility = View.INVISIBLE
                 btn_next?.visibility = View.INVISIBLE
             } else {
-                text_item_next?.visibility = View.VISIBLE
                 btn_next?.visibility = View.VISIBLE
             }
         }
